@@ -16,5 +16,11 @@ namespace Rental
         {
             InitializeComponent();
         }
+
+        private void btn_branch_Click(object sender, EventArgs e)
+        {
+            var f = new BranchForm();
+            f.ShowDialog();
+        }
     }
 }

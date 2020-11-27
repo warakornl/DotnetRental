@@ -136,6 +136,7 @@ namespace Rental
             this.btn_add.TabIndex = 16;
             this.btn_add.Text = "Add";
             this.btn_add.UseVisualStyleBackColor = true;
+            this.btn_add.Click += new System.EventHandler(this.btn_add_Click_1);
             // 
             // btn_update
             // 
@@ -146,6 +147,7 @@ namespace Rental
             this.btn_update.TabIndex = 17;
             this.btn_update.Text = "Update";
             this.btn_update.UseVisualStyleBackColor = true;
+            this.btn_update.Click += new System.EventHandler(this.btn_update_Click);
             // 
             // btn_delete
             // 
@@ -156,6 +158,7 @@ namespace Rental
             this.btn_delete.TabIndex = 18;
             this.btn_delete.Text = "Delete";
             this.btn_delete.UseVisualStyleBackColor = true;
+            this.btn_delete.Click += new System.EventHandler(this.btn_delete_Click);
             // 
             // btn_previous
             // 

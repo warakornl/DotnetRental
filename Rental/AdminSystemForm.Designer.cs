@@ -1,6 +1,7 @@
 ﻿
 namespace Rental
 {
+
     partial class AdminSystemForm
     {
         /// <summary>
@@ -69,6 +70,7 @@ namespace Rental
             this.btn_branch.TabIndex = 9;
             this.btn_branch.Text = "Branch";
             this.btn_branch.UseVisualStyleBackColor = true;
+            this.btn_branch.Click += new System.EventHandler(this.btn_branch_Click);
             // 
             // btn_customers
             // 
