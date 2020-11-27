@@ -19,8 +19,16 @@ namespace Rental
 
         private void btn_login_Click(object sender, EventArgs e)
         {
-            var f = new AdminSystemForm();
-            f.ShowDialog();
+            if(text_in_username.Text.Equals("admin") && text_in_password.Text.Equals("admin"))
+            {
+                var f = new AdminSystemForm();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("You are not authorized");
+            }
+           
         }
     }
 }
