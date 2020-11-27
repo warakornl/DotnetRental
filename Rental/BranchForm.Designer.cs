@@ -169,6 +169,7 @@ namespace Rental
             this.btn_previous.TabIndex = 19;
             this.btn_previous.Text = "<<";
             this.btn_previous.UseVisualStyleBackColor = true;
+            this.btn_previous.Click += new System.EventHandler(this.btn_previous_Click);
             // 
             // btl_next
             // 
@@ -179,6 +180,7 @@ namespace Rental
             this.btl_next.TabIndex = 20;
             this.btl_next.Text = ">>";
             this.btl_next.UseVisualStyleBackColor = true;
+            this.btl_next.Click += new System.EventHandler(this.btl_next_Click);
             // 
             // label8
             // 
