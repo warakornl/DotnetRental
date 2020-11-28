@@ -8,19 +8,29 @@ namespace Rental
 {
     public partial class BranchForm : Form
     {
+        public List<Dictionary<string, string>> masterData;
+        public int currentIndex = 0;
         public BranchForm()
         {
             InitializeComponent();
-            List<Dictionary<string, string>> data = GetAllData();
-            text_in_branch_code.Text = (string) data["Branch_Code"];
-            text_in_branch.Text = (string)data["Branch_name"];
-            text_in_manager = (string)data["Branch_name"];
-            text_in_address = (string)data["Branch_name"];
-            text_in_suburb = (string)data["Branch_name"];
-            text_in_state = (string)data["Branch_name"];
-            text_in_post_code = (string)data["Branch_name"];
-            text_in_phone = (string)data["Branch_name"];
-            text_in_fax = (string)data["Branch_name"];
+            GetAllData();
+            if (masterData.Count > 0)
+            {
+                text_in_branch_code.Text = (string)masterData[0]["Branch_Code"];
+                text_in_branch.Text = (string)masterData[0]["Branch_name"];
+                text_in_manager.Text = (string)masterData[0]["Manager"];
+                text_in_address.Text = (string)masterData[0]["Branch_Address"];
+                text_in_suburb.Text = (string)masterData[0]["Suburb"];
+                text_in_state.Text = (string)masterData[0]["State"];
+                text_in_post_code.Text = (string)masterData[0]["Post_code"];
+                text_in_phone.Text = (string)masterData[0]["Phone"];
+                text_in_fax.Text = (string)masterData[0]["Fax"];
+            }
+            else
+            {
+                MessageBox.Show("No data found");
+            }
+            
         }
 
         private void btn_add_Click_1(object sender, EventArgs e)
@@ -37,11 +47,12 @@ namespace Rental
                 "','" + text_in_suburb.Text + "" +
                 "','" + text_in_state.Text + "" +
                 "','" + text_in_post_code.Text + "" +
-                "','" + text_in_phone + "" +
+                "','" + text_in_phone.Text + "" +
                 "','" + text_in_fax.Text + "');";
             cmd = new MySqlCommand(sql, con);
             cmd.ExecuteNonQuery();
             con.Close();
+            GetAllData();
             MessageBox.Show("Added " + text_in_manager.Text + " Successfully");
         }
 
@@ -58,14 +69,16 @@ namespace Rental
                 ",Suburb = '" + text_in_suburb.Text + "'" +
                 ",State = '" + text_in_state.Text + "'" +
                 ",Post_code = '" + text_in_post_code.Text + "'" +
-                ",Phone = '" + text_in_branch.Text + "'" +
+                ",Phone = '" + text_in_phone.Text + "'" +
                 ",Fax = '" + text_in_fax.Text + "'" +
-                " WHERE Branch_Code = '" + text_in_branch.Text + "'";
+                " WHERE Branch_Code = '" + text_in_branch_code.Text + "'";
             Console.WriteLine(sql);
             cmd = new MySqlCommand(sql, con);
             cmd.ExecuteReader();
             con.Close();
+            GetAllData();
             MessageBox.Show("Updated " + text_in_branch.Text + " Successfully");
+            handlerTextBoxUpdateeMethod();
         }
 
         private void btn_delete_Click(object sender, EventArgs e)
@@ -75,12 +88,14 @@ namespace Rental
             con.Open();
 
             string sql = "DELETE FROM mavis.m_branch " +
-                " WHERE Branch_Code = '" + text_in_branch.Text + "'";
+                " WHERE Branch_Code = '" + text_in_branch_code.Text + "'";
             Console.WriteLine(sql);
             cmd = new MySqlCommand(sql, con);
             cmd.ExecuteReader();
             con.Close();
-            MessageBox.Show("Deleted " + text_in_branch.Text + " Successfully");
+            GetAllData();
+            MessageBox.Show("Deleted " + text_in_branch_code.Text + " Successfully");
+            handlerTextBoxDeleteMethod();
         }
 
         private List<Dictionary<string,string>> GetAllData()
@@ -90,7 +105,7 @@ namespace Rental
             MySqlConnection con = new MySqlConnection(StaticWord.connectionString);
             MySqlCommand cmd = null;
             con.Open();
-            MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * FROM User", con);
+            MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * FROM mavis.m_branch order by Branch_Code", con);
             DataTable data = new DataTable();
             adapter.Fill(data);
             foreach (DataRow row in data.Rows)
@@ -105,18 +120,96 @@ namespace Rental
                 hash.Add("Phone", (string)row["Phone"]);
                 hash.Add("Fax", (string)row["Fax"]);
                 resultList.Add(hash);
+                hash = new Dictionary<string, string>();
             }
+            masterData = resultList;
             return resultList;
+        }
+
+        private void handlerTextBoxDeleteMethod()
+        {
+            if (currentIndex == 0)
+            {
+                text_in_branch_code.Text = "";
+                text_in_branch.Text = "";
+                text_in_manager.Text = "";
+                text_in_address.Text = "";
+                text_in_suburb.Text = "";
+                text_in_state.Text = "";
+                text_in_post_code.Text = "";
+                text_in_phone.Text = "";
+                text_in_fax.Text = "";
+            }else if (currentIndex>0)
+            {
+                text_in_branch_code.Text = (string)masterData[currentIndex - 1]["Branch_Code"];
+                text_in_branch.Text = (string)masterData[currentIndex - 1]["Branch_name"];
+                text_in_manager.Text = (string)masterData[currentIndex - 1]["Manager"];
+                text_in_address.Text = (string)masterData[currentIndex - 1]["Branch_Address"];
+                text_in_suburb.Text = (string)masterData[currentIndex - 1]["Suburb"];
+                text_in_state.Text = (string)masterData[currentIndex - 1]["State"];
+                text_in_post_code.Text = (string)masterData[currentIndex - 1]["Post_code"];
+                text_in_phone.Text = (string)masterData[currentIndex - 1]["Phone"];
+                text_in_fax.Text = (string)masterData[currentIndex - 1]["Fax"];
+                currentIndex--;
+            }
         }
 
         private void btn_previous_Click(object sender, EventArgs e)
         {
-
+            if (currentIndex > 0)
+            {
+                text_in_branch_code.Text = (string)masterData[currentIndex-1]["Branch_Code"];
+                text_in_branch.Text = (string)masterData[currentIndex - 1]["Branch_name"];
+                text_in_manager.Text = (string)masterData[currentIndex - 1]["Manager"];
+                text_in_address.Text = (string)masterData[currentIndex - 1]["Branch_Address"];
+                text_in_suburb.Text = (string)masterData[currentIndex - 1]["Suburb"];
+                text_in_state.Text = (string)masterData[currentIndex - 1]["State"];
+                text_in_post_code.Text = (string)masterData[currentIndex - 1]["Post_code"];
+                text_in_phone.Text = (string)masterData[currentIndex - 1]["Phone"];
+                text_in_fax.Text = (string)masterData[currentIndex - 1]["Fax"];
+                currentIndex--;
+            }
+            else
+            {
+                MessageBox.Show("This is first data");
+            }
         }
 
         private void btl_next_Click(object sender, EventArgs e)
         {
-
+            if (currentIndex < masterData.Count-1)
+            {
+                text_in_branch_code.Text = (string)masterData[currentIndex + 1]["Branch_Code"];
+                text_in_branch.Text = (string)masterData[currentIndex + 1]["Branch_name"];
+                text_in_manager.Text = (string)masterData[currentIndex + 1]["Manager"];
+                text_in_address.Text = (string)masterData[currentIndex + 1]["Branch_Address"];
+                text_in_suburb.Text = (string)masterData[currentIndex + 1]["Suburb"];
+                text_in_state.Text = (string)masterData[currentIndex + 1]["State"];
+                text_in_post_code.Text = (string)masterData[currentIndex + 1]["Post_code"];
+                text_in_phone.Text = (string)masterData[currentIndex + 1]["Phone"];
+                text_in_fax.Text = (string)masterData[currentIndex + 1]["Fax"];
+                currentIndex++;
+            }
+            else
+            {
+                MessageBox.Show("This is last data");
+            }
         }
+
+        private void handlerTextBoxUpdateeMethod()
+        {
+            GetAllData();
+                text_in_branch_code.Text = (string)masterData[currentIndex]["Branch_Code"];
+                text_in_branch.Text = (string)masterData[currentIndex]["Branch_name"];
+                text_in_manager.Text = (string)masterData[currentIndex]["Manager"];
+                text_in_address.Text = (string)masterData[currentIndex]["Branch_Address"];
+                text_in_suburb.Text = (string)masterData[currentIndex]["Suburb"];
+                text_in_state.Text = (string)masterData[currentIndex]["State"];
+                text_in_post_code.Text = (string)masterData[currentIndex]["Post_code"];
+                text_in_phone.Text = (string)masterData[currentIndex]["Phone"];
+                text_in_fax.Text = (string)masterData[currentIndex]["Fax"];
+                currentIndex--;
+        }
+
     }
 }

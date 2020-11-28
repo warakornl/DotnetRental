@@ -235,6 +235,7 @@ namespace Rental
             // text_in_branch
             // 
             this.text_in_branch.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.text_in_branch.ForeColor = System.Drawing.SystemColors.WindowText;
             this.text_in_branch.Location = new System.Drawing.Point(162, 195);
             this.text_in_branch.Name = "text_in_branch";
             this.text_in_branch.Size = new System.Drawing.Size(165, 26);
